@@ -4,14 +4,48 @@
 #include <string.h>
 #include <assert.h>
 #define MAXLEN 1024
-extern char *strdup(const char *__s);
 
+// structure declare
 typedef struct listNode
 {
     int cnt;
     char *p2key;
     struct listNode *p2next;
 }   listNode;
+
+// function declaration
+extern char *strdup(const char *__s);
+listNode *listFind(listNode *head, char *patt); // 查找 key 是否已存在 list 中，若存在，回傳該節點記憶體位置，否則回傳 null
+void listAppend(listNode **head, listNode **tail, char *patt); // 在 list 的尾巴 append 一個新節點 (先出現的詞再出現的機率會比較高)
+int desc(const void *a, const void *b); // 比較函數宣告，按降序排序
+int asce(const void *a, const void *b); // 比較函數宣告，按升序排序
+void listShow(listNode *trav, int listlen, int (*cmp)(const void *a, const void *b)); // 把 list 結果印出，可以把比較函數傳入，選擇按照升、降序排序
+void listFree(listNode *curr); // 程式結束前把宣告的節點都 free 掉
+
+// main function
+int main(int argc, char **argv)
+{
+    int listlen = 0;
+    char buff[MAXLEN];
+    listNode *head = NULL, *tail = NULL, *p2node = NULL;
+    while(scanf("%s", buff) != EOF)
+    {
+        if((p2node = listFind(head, buff)) != NULL) // 如果 key 已存在，把該 key 的計數加一
+        {
+            p2node -> cnt ++;
+        }
+        else // 若是不存在把 key append 在 list 的後面(Insert at tail)
+        {
+            listAppend(&head, &tail, buff); 
+            listlen++;
+        }
+    }
+    listShow(head, listlen, NULL); // 按照插入順序、按照升序排序、按照降序排序
+    // listShow(head, listlen, asce);
+    // listShow(head, listlen, desc);
+    listFree(head); // 釋放記憶體
+    return 0;
+}
 
 listNode *listFind(listNode *head, char *patt)
 {
@@ -91,29 +125,4 @@ void listFree(listNode *curr)
         free(prev -> p2key);
         free(prev);
     }
-}
-
-int main(int argc, char **argv)
-{
-    int listlen = 0;
-    char buff[MAXLEN];
-    listNode *head = NULL, *tail = NULL, *p2node = NULL;
-    while(scanf("%s", buff) != EOF)
-    {
-        if((p2node = listFind(head, buff)) != NULL)
-        {
-            p2node -> cnt ++;
-        }
-        else
-        {
-            listAppend(&head, &tail, buff);
-            listlen++;
-        }
-    }
-    listShow(head, listlen, NULL);
-    // listShow(head, listlen, asce);
-    // listShow(head, listlen, desc);
-    listFree(head);
-    printf("%d\n", listlen);
-    return 0;
 }
