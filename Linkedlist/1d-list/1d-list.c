@@ -14,7 +14,7 @@ typedef struct listNode
 }   listNode;
 
 // function declaration
-extern char *strdup(const char *__s);
+// extern char *strdup(const char *__s);
 listNode *listFind(listNode *head, char *patt); // 查找 key 是否已存在 list 中，若存在，回傳該節點記憶體位置，否則回傳 null
 void listAppend(listNode **head, listNode **tail, char *patt); // 在 list 的尾巴 append 一個新節點 (先出現的詞再出現的機率會比較高)
 int desc(const void *a, const void *b); // 比較函數宣告，按降序排序
